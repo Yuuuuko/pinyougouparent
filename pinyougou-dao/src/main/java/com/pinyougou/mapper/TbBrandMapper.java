@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TbBrandMapper {
     int countByExample(TbBrandExample example);
@@ -32,4 +33,6 @@ public interface TbBrandMapper {
 
     @Select("select * from tb_brand where name=#{name}")
     TbBrand selectByName(String name);
+
+    List<Map> selectOptionList();
 }

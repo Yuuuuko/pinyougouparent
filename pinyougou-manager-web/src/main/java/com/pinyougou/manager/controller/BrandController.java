@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/brand")
@@ -59,5 +60,9 @@ public class BrandController {
     public PageResult search(@RequestBody TbBrand brand, int page, int size){
         PageResult PageResult = brandService.search(brand, page, size);
         return PageResult;
+    }
+    @RequestMapping("/selectOptionList")
+    public List<Map> selectOptionList(){
+        return brandService.selectOptionList();
     }
 }

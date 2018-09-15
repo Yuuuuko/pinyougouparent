@@ -31,4 +31,7 @@ app.service("brandService",function ($http) {
         return $http.post("../brand/search.do?page="+page+"&size="+rows,searchEntity);
     }
 
+    this.selectOptionList=function () {
+        return $http.post("../brand/selectOptionList.do");
+    }
 });
