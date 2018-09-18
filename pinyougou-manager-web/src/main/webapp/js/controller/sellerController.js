@@ -1,5 +1,5 @@
  //控制层 
-app.controller('sellerController' ,function($scope,$controller   ,sellerService){	
+app.controller('sellerController',function($scope,$controller,sellerService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -32,20 +32,21 @@ app.controller('sellerController' ,function($scope,$controller   ,sellerService)
 	}
 	
 	//保存 
-	$scope.save=function(){				
+	$scope.save=function(){
+		console.log($scope.entity.sellerId)
 		var serviceObject;//服务层对象  				
-		if($scope.entity.id!=null){//如果有ID
+		if($scope.entity.sellerId){//如果有ID
 			serviceObject=sellerService.update( $scope.entity ); //修改  
 		}else{
 			serviceObject=sellerService.add( $scope.entity  );//增加 
 		}				
 		serviceObject.success(
 			function(response){
-				if(response.success){
+				if(response.status){
 					//重新查询 
 		        	$scope.reloadList();//重新加载
 				}else{
-					alert(response.message);
+					alert(response.msg);
 				}
 			}		
 		);				

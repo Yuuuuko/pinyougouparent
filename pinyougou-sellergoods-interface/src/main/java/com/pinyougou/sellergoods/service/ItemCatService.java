@@ -57,5 +57,7 @@ public interface ItemCatService {
 	 * @return
 	 */
 	public PageResult findPage(TbItemCat itemCat, int pageNum, int pageSize);
-	
+
+	PageResult findByParentId(TbItemCat itemCat, int page, int rows, long parentId);
+	PageResult findByParentId(long parentId);
 }
