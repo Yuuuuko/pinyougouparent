@@ -34,7 +34,7 @@ public interface GoodsService {
 	/**
 	 * 修改
 	 */
-	public void update(TbGoods goods);
+	public void update(Goods goods);
 	
 
 	/**
@@ -64,4 +64,11 @@ public interface GoodsService {
 	 * @param goods
 	 */
 	void saveGoods(Goods goods);
+
+	Goods findOneById(Long id);
+
+
+	void commitGoods(Long[] ids);
+
+    void goodsMarketAble(Long[] ids);
 }

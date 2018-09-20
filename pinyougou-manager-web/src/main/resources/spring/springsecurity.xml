@@ -16,8 +16,9 @@
     <!-- 页面拦截规则 -->
     <http use-expressions="false">
         <!--需求管理员角色登录-->
+        <!-- "-->
         <intercept-url pattern="/*" access="ROLE_ADMIN" />
-        <form-login login-page="/login.html"  default-target-url="/admin/index.html"
+        <form-login login-page="/login.html" default-target-url="/admin/index.html"
                     authentication-failure-url="/login.html" always-use-default-target="true"/>
         <csrf disabled="true"/>  <!--禁用跨域-->
         <headers>
@@ -30,7 +31,7 @@
     <authentication-manager>
         <authentication-provider>
             <user-service>
-                <user name="admin" password="123456" authorities="ROLE_ADMIN"/>
+                <user name="admin" password="{noop}123456" authorities="ROLE_ADMIN"/>
                 <user name="sunwukong" password="dasheng" authorities="ROLE_ADMIN"/>
             </user-service>
         </authentication-provider>

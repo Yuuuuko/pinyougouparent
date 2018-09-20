@@ -11,26 +11,30 @@
         http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
     <!--添加静态资源拦截过滤-->
-        <http pattern="/shoplogin.html" security="none"></http>
-        <http pattern="/css/**" security="none"></http>
-        <http pattern="/img/**" security="none"></http>
-        <http pattern="/js/**" security="none"></http>
-        <http pattern="/plugins/**" security="none"></http>
-        <http pattern="/seller/add.do" security="none"></http>
+    <http pattern="/shoplogin.html" security="none"></http>
+    <http pattern="/*.html" security="none"></http>
+
+    <http pattern="/seller/add.do" security="none"></http>
+    <http pattern="/css/**" security="none"></http>
+    <http pattern="/img/**" security="none"></http>
+    <http pattern="/js/**" security="none"></http>
+    <http pattern="/plugins/**" security="none"></http>
+
     <!-- 页面拦截规则 -->
     <http use-expressions="false">
         <!--需求管理员角色登录-->
-        <intercept-url pattern="/*" access="ROLE_SELLER" />
-        <form-login login-page="/shoplogin.html"
-                    default-target-url="/admin/index.html" authentication-failure-url="/shoplogin.html"
-                    always-use-default-target="true"/>
+        <intercept-url pattern="/**" access="ROLE_SELLER" />
+        <form-login login-page="/shoplogin.html"  default-target-url="/admin/index.html"
+                    authentication-failure-url="/erro.html" always-use-default-target="true"/>
         <csrf disabled="true"/>  <!--禁用跨域-->
         <headers>
             <frame-options policy="SAMEORIGIN"/>
         </headers>
         <logout/>
     </http>
-
+    <beans:bean id="userDetailService" class="com.pinyougou.shop.UserService.UserDetailsServiceImpl">
+        <beans:property name="sellerService" ref="sellerService"/>
+    </beans:bean>
     <!-- 认证管理器 -->
     <authentication-manager>
         <authentication-provider user-service-ref="userDetailService">
@@ -45,7 +49,5 @@
     <dubbo:registry address="zookeeper://192.168.25.130:2181"/>
     <dubbo:reference id="sellerService" interface="com.pinyougou.sellergoods.service.SellerService" >
     </dubbo:reference>
-    <beans:bean id="userDetailService" class="com.pinyougou.shop.UserService.UserDetailsServiceImpl">
-        <beans:property name="sellerService" ref="sellerService"/>
-    </beans:bean>
+
 </beans:beans>

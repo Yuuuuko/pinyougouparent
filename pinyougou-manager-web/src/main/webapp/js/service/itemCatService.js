@@ -32,4 +32,7 @@ app.service('itemCatService',function($http){
     this.searchByParentId=function(page,rows,searchEntity,parentId){
         return $http.post('../itemCat/searchByParentId.do?page='+page+"&rows="+rows+"&parentId="+parentId, searchEntity);
     }
+    this.findByParentId=function(parentId){
+        return $http.post('../itemCat/finByParentId.do?parentId='+parentId);
+    }
 });

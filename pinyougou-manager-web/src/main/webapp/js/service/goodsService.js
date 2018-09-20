@@ -13,6 +13,10 @@ app.service('goodsService',function($http){
 	this.findOne=function(id){
 		return $http.get('../goods/findOne.do?id='+id);
 	}
+
+    this.findOneById=function(id){
+        return $http.post('../goods/findOneById.do',id);
+    }
 	//增加 
 	this.add=function(entity){
 		return  $http.post('../goods/add.do',entity );
@@ -28,5 +32,11 @@ app.service('goodsService',function($http){
 	//搜索
 	this.search=function(page,rows,searchEntity){
 		return $http.post('../goods/search.do?page='+page+"&rows="+rows, searchEntity);
-	}    	
+	}
+
+	//提交审核
+	this.commitGoods=function (ids) {
+		return $http.post('../goods/commitGoods.do',ids);
+    }
+
 });
