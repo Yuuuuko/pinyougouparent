@@ -35,8 +35,8 @@ app.service('goodsService',function($http){
 	}
 
 	//提交审核
-	this.commitGoods=function (ids) {
-		return $http.post('../goods/commitGoods.do',ids);
+	this.commitGoods=function (ids,status) {
+		return $http.post('../goods/commitGoods.do?status='+status,ids);
     }
 
 });

@@ -26,6 +26,7 @@
 	<script src="../js/base_pagination.js"></script>
 	<script src="../js/controller/baseController.js"></script>
 	<script src="../js/service/goodsService.js"></script>
+	<script src="../js/service/uploadService.js"></script>
 	<script src="../js/service/itemCatService.js"></script>
 	<script src="../js/service/typeTemplateService.js"></script>
 	<script src="../js/controller/goodsController.js"></script>
@@ -48,8 +49,8 @@
                                 <div class="form-group form-inline">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-default" title="删除" ng-click="dele()"><i class="fa fa-trash-o"></i> 删除</button>
-                                        <button type="button" class="btn btn-default" title="审核通过" ng-click="commitGoods()"><i class="fa fa-check"></i> 审核通过</button>
-                                        <button type="button" class="btn btn-default" title="驳回" onclick='confirm("你确认要驳回吗？")'><i class="fa fa-ban"></i> 驳回</button>
+                                        <button type="button" class="btn btn-default" title="审核通过" ng-click="commitGoods('1')"><i class="fa fa-check"></i> 审核通过</button>
+                                        <button type="button" class="btn btn-default" title="驳回" onclick='confirm("你确认要驳回吗？");commitGoods("2")'><i class="fa fa-ban"></i> 驳回</button>
                                         <button type="button" class="btn btn-default" title="刷新" ><i class="fa fa-refresh"></i> 刷新</button>
                                     </div>
                                 </div>

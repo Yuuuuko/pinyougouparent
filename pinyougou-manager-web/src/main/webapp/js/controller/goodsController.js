@@ -1,5 +1,5 @@
  //控制层 
-app.controller('goodsController' ,function($scope,goodsService,itemCatService,typeTemplateService,$controller){
+app.controller('goodsController' ,function($scope,goodsService,itemCatService,typeTemplateService,$controller,uploadService){
 
     $controller("baseController",{$scope:$scope});
 	//参数封装对象初始化，对象内有3个goods相关的属性对象
@@ -93,8 +93,8 @@ app.controller('goodsController' ,function($scope,goodsService,itemCatService,ty
 		);				
 	}
 	//审核商品
-	$scope.commitGoods=function () {
-		goodsService.commitGoods($scope.selectIds).success(function (data) {
+	$scope.commitGoods=function (status) {
+		goodsService.commitGoods($scope.selectIds,status).success(function (data) {
             if(data.status){
                 $scope.reloadList();//刷新列表
                 $scope.selectIds=[];

@@ -11,6 +11,8 @@ import com.pinyougou.pojo.TbItemCatExample.Criteria;
 import com.pinyougou.sellergoods.service.ItemCatService;
 
 import entity.PageResult;
+
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -24,6 +26,9 @@ public class ItemCatServiceImpl implements ItemCatService {
 
 	@Autowired
 	private TbItemCatMapper itemCatMapper;
+
+	@Autowired
+	private RedisTemplate redisTemplate;
 	
 	/**
 	 * 查询全部
@@ -111,8 +116,13 @@ public class ItemCatServiceImpl implements ItemCatService {
 				criteria.andNameLike("%"+itemCat.getName()+"%");
 			}
 		}
+
 		criteria.andParentIdEqualTo(parentId);
 		Page<TbItemCat> page= (Page<TbItemCat>)itemCatMapper.selectByExample(example);
+		List<TbItemCat> itemCatList = findAll();
+		for (TbItemCat itemcat : itemCatList) {
+			redisTemplate.boundHashOps("itemCat").put(itemcat.getName(),itemcat.getTypeId());
+		}
 		return new PageResult(page.getTotal(), page.getResult());
 	}
 
@@ -122,6 +132,9 @@ public class ItemCatServiceImpl implements ItemCatService {
 		Criteria criteria = example.createCriteria();
 
 		criteria.andParentIdEqualTo(parentId);
+
+
+
 		List<TbItemCat> tbItemCats = itemCatMapper.selectByExample(example);
 		return new PageResult(0, tbItemCats);
 	}

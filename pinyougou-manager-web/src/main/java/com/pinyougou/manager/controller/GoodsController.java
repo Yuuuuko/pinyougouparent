@@ -2,16 +2,25 @@ package com.pinyougou.manager.controller;
 
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSON;
 import com.pinyougou.pojo.TbGoods;
+import com.pinyougou.pojo.TbItem;
 import com.pinyougou.pojogroup.Goods;
 import com.pinyougou.sellergoods.service.GoodsService;
 import entity.PageResult;
 import entity.Result;
-import org.springframework.security.core.context.SecurityContextHolder;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,6 +29,13 @@ import java.util.List;
 public class GoodsController {
 	@Reference
 	private GoodsService goodsService;
+
+	@Autowired
+	private JmsTemplate jmsTemplate;
+	@Autowired
+	private Destination queueSolrDestination;
+	@Autowired
+	private Destination queueDelSolrDestination;
 	@RequestMapping("/add")
 	public Result addGoods(@RequestBody Goods goods) {
 		/*System.out.println(goods);
@@ -120,10 +136,21 @@ public class GoodsController {
 	 * @return
 	 */
 	@RequestMapping("/delete")
-	public Result delete(Long [] ids){
+	public Result delete(final Long [] ids){
 		System.out.println(Arrays.toString(ids));
 		try {
 			goodsService.delete(ids);
+
+			//searchService.deleteByGoodsIds(Arrays.asList(ids));
+
+				jmsTemplate.send(queueDelSolrDestination, new MessageCreator() {
+					@Override
+					public Message createMessage(Session session) throws JMSException {
+						return session.createObjectMessage(ids);
+					}
+				});
+
+
 			return new Result(true, "删除成功");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -153,11 +180,28 @@ public class GoodsController {
 	}
 
 	@RequestMapping("/commitGoods")
-	public Result commitGoods(@RequestBody Long[] ids){
+	public Result commitGoods(@RequestBody Long[] ids,String status){
 
 		System.out.println(Arrays.toString(ids));
+		System.out.println("状态码:"+status);
 		try {
 			goodsService.commitGoods(ids);
+			if (status.equals("1")){
+				List<TbItem> itemList = goodsService.findItemListByGoodsIdandStatus(ids, status);
+				if (itemList.size()>0){
+					final String itemListStr = JSON.toJSONString(itemList);
+
+					jmsTemplate.send(queueSolrDestination, new MessageCreator() {
+						@Override
+						public Message createMessage(Session session) throws JMSException {
+							return session.createTextMessage(itemListStr);
+						}
+					});
+
+				}
+			}
+
+
 			return new Result(true,"提交成功");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -165,4 +209,10 @@ public class GoodsController {
 		}
 
 	}
+
+
+	/*@RequestMapping("/genHtml")
+	public void genHtml(Long goodsId){
+		itemPageService.getItemHtml(goodsId);
+	}*/
 }
